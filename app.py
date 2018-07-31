@@ -14,7 +14,7 @@ from sklearn.svm import SVC
 
 omdb = pd.read_json('movies/data/omdb-data.json.gz', orient='record', lines=True)
 genre = pd.read_json('movies/data/genres.json.gz', orient='record', lines=True)
-wiki = pd.read_json('movies/data/wikidata-movies.json.gz', orient='record', lines=True)
+wiki = pd.read_json('movies/data/wikidata-movies2.json.gz', orient='record', lines=True)
 rotten = pd.read_json('movies/data/rotten-tomatoes.json.gz', orient='record', lines=True)
 
 # data = pd.read_json('label_map/part-00000-2ab6072d-bb8d-475a-b4c2-190e48e5befe-c000.json', lines=True)
@@ -35,33 +35,62 @@ def get_oscar_nominations(str):
 	else :
 		return 0
 
+def get_wins(str):
+	token = str.split('.')
+	for x in token:
+		if x.find('wins') > -1:
+			tmp = x.split(' ')
+			return tmp[tmp.index('wins') -1]
+		if x.find('win') > -1 :
+			tmp = x.split(' ')
+			return tmp[tmp.index('win') -1]
+	return 0
+
+def get_nominations(str):
+	token = str.split('.')
+	for x in token:
+		if x.find('nominations') > -1:
+			tmp = x.split(' ')
+			return tmp[tmp.index('nominations') -1]
+		if x.find('nomination') > -1 :
+			tmp = x.split(' ')
+			return tmp[tmp.index('nomination') -1]
+	return 0
+
+print(get_wins('Won 1 Oscar. Another 1 win & 1 nomination.'))
+
+
 get_oscar_wins_vec = np.vectorize(get_oscar_wins)
 get_oscar_nominations_vec = np.vectorize(get_oscar_nominations)
+get_wins_vec = np.vectorize(get_wins)
+get_nominations_vec = np.vectorize(get_nominations)
 
 
 omdb['oscar_wins'] = get_oscar_wins_vec(omdb['omdb_awards'])
 omdb['oscar_nominations'] = get_oscar_nominations_vec(omdb['omdb_awards'])
+omdb['wins'] = get_wins_vec(omdb['omdb_awards'])
+omdb['nominations'] = get_nominations_vec(omdb['omdb_awards'])
 
-# omdb_genre = omdb.join(genre.set_index('wikidata_id'), )
 
-# wiki_rotten = pd.merge(wiki, rotten,  how='left', left_on=['imdb_id','rotten_tomatoes_id'], right_on = ['imdb_id','rotten_tomatoes_id'])
-# X = wiki_rotten.drop(['audience_percent', 'audience_ratings','audience_average', 'imdb_id', 'rotten_tomatoes_id', 'wikidata_id'], axis=1)
+wiki_rotten = pd.merge(wiki, rotten,  how='left', left_on=['imdb_id','rotten_tomatoes_id'], right_on = ['imdb_id','rotten_tomatoes_id'])
+omdb_wiki_rotten = pd.merge(wiki_rotten, omdb,  how='left', left_on=['imdb_id'], right_on = ['imdb_id'])
 
-omdb_rotten = pd.merge(omdb, rotten,  how='left', left_on=['imdb_id'], right_on = ['imdb_id']).dropna()
+omdb_wiki_rotten = omdb_wiki_rotten[['audience_average', 'audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']].dropna()
 
-X = omdb_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'oscar_wins', 'oscar_nominations']]
-y = omdb_rotten['audience_average'].values
+X = omdb_wiki_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']]
+y = omdb_wiki_rotten['audience_average']
+
 y = y.astype('int')
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
 # model = GaussianNB()
 # model = KNeighborsClassifier(n_neighbors=20)
-# model = SVC(kernel='linear', C=2.0)
+# model = SVC(kernel='linear', C=1.0)
 
 model = make_pipeline(
     StandardScaler(),
-    SVC(kernel='linear', C=5)
+    KNeighborsClassifier(n_neighbors=20)
 )
 
 model.fit(X_train, y_train)
