@@ -129,4 +129,4 @@ def make_genre_map():
 if __name__ == "__main__":
     make_wikidata_movies()
     make_genre_map()
-    #make_label_map()
+    # make_label_map()
