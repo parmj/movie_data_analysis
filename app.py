@@ -98,7 +98,7 @@ del omdb_wiki_rotten['omdb_awards']
 del omdb_wiki_rotten['omdb_plot']
 del omdb_wiki_rotten['critic_average']
 del omdb_wiki_rotten['critic_percent']
-del omdb_wiki_rotten['audience_percent']
+# del omdb_wiki_rotten['audience_percent']
 
 
 # print(omdb_wiki_rotten.columns.values)
@@ -108,9 +108,9 @@ omdb_wiki_rotten = omdb_wiki_rotten.dropna()
 # X = omdb_wiki_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']]
 
 X = omdb_wiki_rotten.drop(['audience_average'], axis=1)
-y = omdb_wiki_rotten['audience_average'] 
+y = omdb_wiki_rotten['audience_average'] / 10
 y = y.astype('int')
-
+print(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
 # model = GaussianNB()
@@ -119,9 +119,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 
 model = make_pipeline(
     StandardScaler(),
-    # KNeighborsClassifier(n_neighbors=10)
+    KNeighborsClassifier(n_neighbors=10)
     # LinearRegression()
-    SVC(kernel='linear', C=1)
+    # SVC(kernel='linear', C=1)
 
 )
 
