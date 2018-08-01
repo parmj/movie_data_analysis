@@ -6,9 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVC
-
-
-
+from sklearn.linear_model import LinearRegression
 
 
 
@@ -40,10 +38,10 @@ def get_wins(str):
 	for x in token:
 		if x.find('wins') > -1:
 			tmp = x.split(' ')
-			return tmp[tmp.index('wins') -1]
+			return int(tmp[tmp.index('wins') -1])
 		if x.find('win') > -1 :
 			tmp = x.split(' ')
-			return tmp[tmp.index('win') -1]
+			return int(tmp[tmp.index('win') -1])
 	return 0
 
 def get_nominations(str):
@@ -51,13 +49,11 @@ def get_nominations(str):
 	for x in token:
 		if x.find('nominations') > -1:
 			tmp = x.split(' ')
-			return tmp[tmp.index('nominations') -1]
+			return int(tmp[tmp.index('nominations') -1])
 		if x.find('nomination') > -1 :
 			tmp = x.split(' ')
-			return tmp[tmp.index('nomination') -1]
+			return int(tmp[tmp.index('nomination') -1])
 	return 0
-
-print(get_wins('Won 1 Oscar. Another 1 win & 1 nomination.'))
 
 
 get_oscar_wins_vec = np.vectorize(get_oscar_wins)
@@ -72,14 +68,47 @@ omdb['wins'] = get_wins_vec(omdb['omdb_awards'])
 omdb['nominations'] = get_nominations_vec(omdb['omdb_awards'])
 
 
+
 wiki_rotten = pd.merge(wiki, rotten,  how='left', left_on=['imdb_id','rotten_tomatoes_id'], right_on = ['imdb_id','rotten_tomatoes_id'])
 omdb_wiki_rotten = pd.merge(wiki_rotten, omdb,  how='left', left_on=['imdb_id'], right_on = ['imdb_id'])
 
-omdb_wiki_rotten = omdb_wiki_rotten[['audience_average', 'audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']].dropna()
+genres = omdb_wiki_rotten['omdb_genres'].str.join('|').str.get_dummies()
+genres.reset_index(drop=True, inplace=True)
+omdb_wiki_rotten = pd.concat([omdb_wiki_rotten, genres], axis=1)
 
-X = omdb_wiki_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']]
-y = omdb_wiki_rotten['audience_average']
 
+del omdb_wiki_rotten['imdb_id']
+del omdb_wiki_rotten['rotten_tomatoes_id']
+del omdb_wiki_rotten['original_language']
+del omdb_wiki_rotten['publication_date']
+del omdb_wiki_rotten['series']
+del omdb_wiki_rotten['wikidata_id']
+del omdb_wiki_rotten['label']
+del omdb_wiki_rotten['genre']
+del omdb_wiki_rotten['filming_location']
+del omdb_wiki_rotten['director']
+del omdb_wiki_rotten['cast_member']
+del omdb_wiki_rotten['based_on']
+del omdb_wiki_rotten['country_of_origin']
+del omdb_wiki_rotten['enwiki_title']
+del omdb_wiki_rotten['metacritic_id']
+del omdb_wiki_rotten['main_subject']
+del omdb_wiki_rotten['omdb_genres']
+del omdb_wiki_rotten['omdb_awards']
+del omdb_wiki_rotten['omdb_plot']
+del omdb_wiki_rotten['critic_average']
+del omdb_wiki_rotten['critic_percent']
+del omdb_wiki_rotten['audience_percent']
+
+
+# print(omdb_wiki_rotten.columns.values)
+omdb_wiki_rotten = omdb_wiki_rotten.dropna()
+
+# omdb_wiki_rotten = omdb_wiki_rotten[['audience_average', 'audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']].dropna()
+# X = omdb_wiki_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']]
+
+X = omdb_wiki_rotten.drop(['audience_average'], axis=1)
+y = omdb_wiki_rotten['audience_average'] 
 y = y.astype('int')
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
@@ -90,13 +119,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 
 model = make_pipeline(
     StandardScaler(),
-    KNeighborsClassifier(n_neighbors=20)
+    # KNeighborsClassifier(n_neighbors=10)
+    # LinearRegression()
+    SVC(kernel='linear', C=1)
+
 )
 
 model.fit(X_train, y_train)
 print(model.score(X_test, y_test))
 
-
+# wiki['genre'] = wiki['genre'].apply(lambda x: x[0])
+# wiki_genre = pd.merge(wiki, genre,  how='left', left_on=['genre'], right_on = ['wikidata_id']).dropna()
+# print(wiki_genre)
 
 
 
