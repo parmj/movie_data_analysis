@@ -111,6 +111,31 @@ def make_wikidata_movies():
     # output is about 4MB compressed: safe to .coalesce().
     output_data.coalesce(1).write.json('./wikidata-movies', mode='overwrite', compression='gzip')
 
+def make_director_map():
+    """
+    Make mapping of genre wikidata_id value to numan-readable label.
+    """
+    wd = spark.read.parquet(sys.argv[1])
+    label_map = wd.filter(wd.label.isNotNull()).select(wd['id'].alias('wikidata_id'), wd['label'])
+    director = wd.select(functions.explode(wd['director']).alias('wikidata_id')).distinct()
+    director = functions.broadcast(director) # only a few thousand values that we want to keep
+    director = director.join(label_map, on='wikidata_id')
+    director = director.withColumnRenamed('label', 'director_label')
+    # output is about <1MB compressed: safe to .coalesce().
+    director.coalesce(1).write.json('./directors', mode='overwrite', compression='gzip')
+
+def make_actor_map():
+    """
+    Make mapping of genre wikidata_id value to numan-readable label.
+    """
+    wd = spark.read.parquet(sys.argv[1])
+    label_map = wd.filter(wd.label.isNotNull()).select(wd['id'].alias('wikidata_id'), wd['label'])
+    actors = wd.select(functions.explode(wd['cast_member']).alias('wikidata_id')).distinct()
+    actors = functions.broadcast(actors) # only a few thousand values that we want to keep
+    actors = actors.join(label_map, on='wikidata_id')
+    actors = actors.withColumnRenamed('label', 'actor_label')
+    # output is about <1MB compressed: safe to .coalesce().
+    actors.coalesce(1).write.json('./actors', mode='overwrite', compression='gzip')
 
 def make_genre_map():
     """
@@ -128,5 +153,7 @@ def make_genre_map():
 
 if __name__ == "__main__":
     make_wikidata_movies()
-    make_genre_map()
+    # make_genre_map()
     # make_label_map()
+    # make_director_map()
+    make_actor_map()
