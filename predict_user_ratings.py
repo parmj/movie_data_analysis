@@ -101,17 +101,15 @@ del omdb_wiki_rotten['omdb_plot']
 del omdb_wiki_rotten['audience_percent']
 
 
-# print(omdb_wiki_rotten.columns.values)
 omdb_wiki_rotten = omdb_wiki_rotten.dropna()
 
-# omdb_wiki_rotten = omdb_wiki_rotten[['audience_average', 'audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']].dropna()
-# X = omdb_wiki_rotten[['audience_ratings', 'critic_average', 'critic_percent', 'nbox', 'ncost', 'wins', 'nominations']]
+# omdb_wiki_rotten = omdb_wiki_rotten[['audience_average', 'nominations']].dropna()
 
 X = omdb_wiki_rotten.drop(['audience_average'], axis=1)
 y = omdb_wiki_rotten['audience_average']
 y = y.apply(lambda x: round(x * 2) / 2) 
 y = y.astype('str')
-print(y)
+# print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
