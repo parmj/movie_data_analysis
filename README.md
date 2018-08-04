@@ -1,5 +1,21 @@
 # Movie Data-Science Project
 
-SOmething about the project 
+A CMPT353 project analyzing success in movies using data from Wikidata, Omdb, and Rotten Tomatoes.
 
-## First question answered
+## How to run
+All code used to produce the report is located notebooks in the main directory.
+required: http://jupyter.org/install
+to run:
+`jupyter notebook`
+### Basic Correlations.ipynb
+Calculates correlation between audience reviews with profit and number of ratings with profit
+### Director_vs_Actor_on_nBox.ipynb
+Tests if directors/actors have impact on box office
+### Genre_Profit_Notebook.ipynb
+Tests if genre and profit are related
+### NLP.ipynb
+Predicts genre based on plot
+### time_genre.ipynb
+Shows what genres are popular during a certain year
+### predict_user_ratings.ipynb
+Predicts an Rotten Tomato audience rating
