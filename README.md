@@ -4,21 +4,21 @@ A CMPT353 project analyzing success in movies using data from Wikidata, Omdb, an
 
 ## Required Libraries
 
-import pandas as pd 
-import numpy as np 
-sklearn : {
-sklearn.model_selection
-sklearn.naive_bayes
-sklearn.neighbors
-sklearn.preprocessing
-sklearn.pipeline import make_pipeline
-sklearn.svm import SVC
-sklearn.linear_model
-}
-matplotlib
-seaborn
-scipy
-statsmodels.stats.multicomp
+import pandas as pd <br />
+import numpy as np <br />
+sklearn : {<br />
+sklearn.model_selection <br />
+sklearn.naive_bayes <br />
+sklearn.neighbors <br />
+sklearn.preprocessing <br />
+sklearn.pipeline import make_pipeline <br />
+sklearn.svm import SVC <br />
+sklearn.linear_model <br />
+} <br />
+matplotlib <br />
+seaborn <br />
+scipy <br />
+statsmodels.stats.multicomp <br />
 
 
 ## How to run
