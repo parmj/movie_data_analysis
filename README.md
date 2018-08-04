@@ -2,6 +2,25 @@
 
 A CMPT353 project analyzing success in movies using data from Wikidata, Omdb, and Rotten Tomatoes.
 
+## Required Libraries
+
+import pandas as pd 
+import numpy as np 
+sklearn : {
+sklearn.model_selection
+sklearn.naive_bayes
+sklearn.neighbors
+sklearn.preprocessing
+sklearn.pipeline import make_pipeline
+sklearn.svm import SVC
+sklearn.linear_model
+}
+matplotlib
+seaborn
+scipy
+statsmodels.stats.multicomp
+
+
 ## How to run
 All code used to produce the report is located notebooks in the main directory.
 required: http://jupyter.org/install
@@ -19,3 +38,6 @@ Predicts genre based on plot
 Shows what genres are popular during a certain year
 ### predict_user_ratings.ipynb
 Predicts an Rotten Tomato audience rating
+
+## How to run Data Extraction
+https://coursys.sfu.ca/2018su-cmpt-353-d1/pages/ProjectMoviesData
