@@ -1,6 +1,6 @@
-# Movie Data-Science Project
+# Movie Success Analysis Project
 
-A Data Science project analyzing success in movies using data from Wikidata, Omdb, and Rotten Tomatoes.
+Movie Success Analysis Project cooperating machine learning techniques and data sets from Wikidata, Omdb, and Rotten Tomatoes to analyze success in movies. The project is written in Python.
 
 ## Required Libraries
 
