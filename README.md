@@ -2,7 +2,13 @@
 
 Movie Success Analysis Project cooperating machine learning techniques and data sets from Wikidata, Omdb, and Rotten Tomatoes to analyze success in movies. The project is written in Python.
 
-## Required Libraries
+## Installation
+Please visit the notebooks in the main directory for code used to produce the report. <br />
+required: http://jupyter.org/install <br />
+to run:
+`jupyter notebook`
+
+### Required Libraries
 
 import pandas as pd <br />
 import numpy as np <br />
@@ -20,12 +26,6 @@ seaborn <br />
 scipy <br />
 statsmodels.stats.multicomp <br />
 
-
-## How to run
-All code used to produce the report is located notebooks in the main directory.
-required: http://jupyter.org/install
-to run:
-`jupyter notebook`
 ### Basic Correlations.ipynb
 Calculates correlation between audience reviews with profit and number of ratings with profit
 ### Director_vs_Actor_on_nBox.ipynb
