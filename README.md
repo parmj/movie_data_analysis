@@ -1,6 +1,6 @@
 # Movie Data-Science Project
 
-A CMPT353 project analyzing success in movies using data from Wikidata, Omdb, and Rotten Tomatoes.
+A Data Science project analyzing success in movies using data from Wikidata, Omdb, and Rotten Tomatoes.
 
 ## Required Libraries
 
@@ -39,5 +39,4 @@ Shows what genres are popular during a certain year
 ### predict_user_ratings.ipynb
 Predicts an Rotten Tomato audience rating
 
-## How to run Data Extraction
-https://coursys.sfu.ca/2018su-cmpt-353-d1/pages/ProjectMoviesData
+
